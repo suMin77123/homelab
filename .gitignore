@@ -1,5 +1,7 @@
-# Active env symlink (varies per operator)
+# Env files — block all real ones, allow .example templates
 .env
+.env.*
+!.env.*.example
 
 # Terraform / OpenTofu
 .terraform/
