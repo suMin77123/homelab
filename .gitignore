@@ -1,0 +1,39 @@
+# Active env symlink (varies per operator)
+.env
+
+# Terraform / OpenTofu
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+*.tfplan
+plan.tfplan
+crash.log
+crash.*.log
+
+# Ansible
+*.retry
+.ansible/
+
+# Secrets + tfvars (values, not code)
+*.tfvars
+*.tfvars.json
+age.key
+*.pem
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*~
+
+# Python (Ansible collections)
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Conductor workspace context (local only)
+.context/
