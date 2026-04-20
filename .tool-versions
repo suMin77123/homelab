@@ -1,0 +1,5 @@
+opentofu 1.8.5
+python 3.12.7
+cloudflared 2024.11.1
+hcloud 1.50.0
+jq 1.7.1
