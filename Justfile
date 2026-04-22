@@ -22,7 +22,7 @@ install:
         echo "✓ pipx already installed"; \
     fi
     @if ! command -v ansible >/dev/null 2>&1; then \
-        pipx install --include-deps ansible && pipx inject ansible docker; \
+        pipx install --include-deps ansible && pipx runpip ansible install docker; \
     else \
         echo "✓ ansible already installed"; \
     fi
