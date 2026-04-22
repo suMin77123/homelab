@@ -13,13 +13,18 @@ default:
 # Setup
 # ============================================================
 
-# Install pinned CLI tools via mise + Ansible via pipx
+# Install pinned CLI tools via mise + Ansible via pipx + awscli via brew
 install:
     mise install
     @if ! command -v ansible >/dev/null 2>&1; then \
         pipx install --include-deps ansible && pipx inject ansible docker; \
     else \
         echo "✓ ansible already installed"; \
+    fi
+    @if ! command -v aws >/dev/null 2>&1; then \
+        brew install awscli; \
+    else \
+        echo "✓ aws CLI already installed"; \
     fi
     @echo "✓ Tools ready — run 'just envs' next"
 
@@ -47,9 +52,12 @@ ctx:
     @echo "PROJECT = ${PROJECT:-<unset>}"
     @if [ -L .env ]; then readlink .env | xargs -I{} echo ".env    → {}"; else echo ".env    <missing or not a symlink>"; fi
 
+# Path is hardcoded (not ${CSP}) because state backend (Cloudflare R2)
+# is independent of the infra CSP (Hetzner). See docs/decisions/2026-04-22-*.
+
 # Create the remote state bucket (one-time, Phase 2)
 bootstrap-state:
-    @bash {{ROOT}}/hack/${CSP}/create-state-bucket.sh
+    @bash {{ROOT}}/hack/cloudflare/create-state-bucket.sh
 
 # ============================================================
 # Cloud auth sanity checks
