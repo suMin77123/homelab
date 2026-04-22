@@ -26,10 +26,10 @@ install:
     else \
         echo "✓ ansible already installed"; \
     fi
-    @if ! pipx runpip ansible show docker >/dev/null 2>&1; then \
-        pipx runpip ansible install docker; \
+    @if ! (cd /tmp && pipx runpip ansible show docker) >/dev/null 2>&1; then \
+        (cd /tmp && pipx runpip ansible install docker); \
     else \
-        echo "✓ docker python package injected into ansible venv"; \
+        echo "✓ docker python package in ansible venv"; \
     fi
     @if ! command -v aws >/dev/null 2>&1; then \
         brew install awscli; \
