@@ -22,9 +22,14 @@ install:
         echo "✓ pipx already installed"; \
     fi
     @if ! command -v ansible >/dev/null 2>&1; then \
-        pipx install --include-deps ansible && pipx runpip ansible install docker; \
+        pipx install --include-deps ansible; \
     else \
         echo "✓ ansible already installed"; \
+    fi
+    @if ! pipx runpip ansible show docker >/dev/null 2>&1; then \
+        pipx runpip ansible install docker; \
+    else \
+        echo "✓ docker python package injected into ansible venv"; \
     fi
     @if ! command -v aws >/dev/null 2>&1; then \
         brew install awscli; \
