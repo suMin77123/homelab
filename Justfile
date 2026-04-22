@@ -43,7 +43,11 @@ envs:
     #!/usr/bin/env bash
     set -euo pipefail
     cd {{ROOT}}
-    mapfile -t files < <(ls -1 .env.*.* 2>/dev/null | grep -v '\.example$' || true)
+    # while-read rather than mapfile so this works on macOS's bash 3.2
+    files=()
+    while IFS= read -r line; do
+        [ -n "$line" ] && files+=("$line")
+    done < <(ls -1 .env.*.* 2>/dev/null | grep -v '\.example$' || true)
     if [ "${#files[@]}" -eq 0 ]; then
         echo "No .env.<csp>.<project> files found next to Justfile." >&2
         echo "Copy .env.hetzner.homelab.example → .env.hetzner.homelab, fill in tokens." >&2
