@@ -13,13 +13,18 @@ default:
 # Setup
 # ============================================================
 
-# Install pinned CLI tools via mise + Ansible via pipx
+# Install pinned CLI tools via mise + Ansible via pipx + awscli via brew
 install:
     mise install
     @if ! command -v ansible >/dev/null 2>&1; then \
         pipx install --include-deps ansible && pipx inject ansible docker; \
     else \
         echo "✓ ansible already installed"; \
+    fi
+    @if ! command -v aws >/dev/null 2>&1; then \
+        brew install awscli; \
+    else \
+        echo "✓ aws CLI already installed"; \
     fi
     @echo "✓ Tools ready — run 'just envs' next"
 
