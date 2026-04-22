@@ -34,14 +34,23 @@ State lives in Hetzner Object Storage (S3-compatible), one bucket per project wi
 
 ## Prerequisites
 
+**Host machine**
 - macOS with Homebrew
 - `mise` + `just` (`brew install mise just`)
 - SSH key (`ssh-keygen -t ed25519 -f ~/.ssh/homelab`)
-- Hetzner Cloud account + API token + Object Storage credentials
-- Cloudflare account + domain + API token (for Phase 4)
-- Tailscale account (for Phase 4)
 
-Full prerequisites checklist: see the plan file.
+**Hetzner Cloud**
+- Account + payment method on file
+- API token (Console → Security → API Tokens, Read & Write)
+
+**Hetzner Object Storage** (state backend)
+- Object Storage enabled: Console → Object Storage → create a project in your chosen region (`fsn1` recommended to match server location)
+- S3-protocol credentials generated in that project. Note: these are *separate* from the Cloud API token above
+
+**Later phases**
+- Cloudflare account + domain + API token (Phase 4)
+- Tailscale account + reusable auth key (Phase 4)
+- Infisical workspace + machine identity (Phase 7)
 
 ## Quick start
 
@@ -58,7 +67,7 @@ just ctx
 # 4. Cloud auth sanity check
 just login-hetzner
 
-# 5. Bootstrap remote state bucket (first time only)
+# 5. Bootstrap remote state bucket (first time only, creates + smoke-tests it)
 just bootstrap-state
 
 # 6. Deploy a stack (example)
