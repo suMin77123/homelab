@@ -30,18 +30,29 @@ ansible/roles/      # One role per service
 hack/<csp>/         # One-time bootstrap scripts (state bucket creation, etc.)
 ```
 
-State lives in Hetzner Object Storage (S3-compatible), one bucket per project with per-stack key prefix.
+State lives in Cloudflare R2 (S3-compatible), one bucket with per-stack key prefix. Independent of the infra CSP — see `docs/decisions/2026-04-22-state-backend-cloudflare-r2.md`.
 
 ## Prerequisites
 
+**Host machine**
 - macOS with Homebrew
 - `mise` + `just` (`brew install mise just`)
 - SSH key (`ssh-keygen -t ed25519 -f ~/.ssh/homelab`)
-- Hetzner Cloud account + API token + Object Storage credentials
-- Cloudflare account + domain + API token (for Phase 4)
-- Tailscale account (for Phase 4)
 
-Full prerequisites checklist: see the plan file.
+**Hetzner Cloud** (infra)
+- Account + payment method on file
+- API token (Console → Security → API Tokens, Read & Write)
+
+**Cloudflare R2** (state backend)
+- Cloudflare account (free tier is enough)
+- R2 enabled (Dashboard → R2 → accept the free-tier plan)
+- R2 API token scoped "Object Read & Write" for the state bucket — gives `AWS_ACCESS_KEY_ID` + `AWS_SECRET_ACCESS_KEY`
+- Cloudflare account ID (R2 overview page) — used in the R2 endpoint URL
+
+**Later phases**
+- Cloudflare domain + DNS/Tunnel API token (Phase 4 — separate token from the R2 one above)
+- Tailscale account + reusable auth key (Phase 4)
+- Infisical workspace + machine identity (Phase 7)
 
 ## Quick start
 
@@ -58,7 +69,7 @@ just ctx
 # 4. Cloud auth sanity check
 just login-hetzner
 
-# 5. Bootstrap remote state bucket (first time only)
+# 5. Bootstrap remote state bucket (first time only, creates + smoke-tests it)
 just bootstrap-state
 
 # 6. Deploy a stack (example)
