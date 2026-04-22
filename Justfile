@@ -16,6 +16,11 @@ default:
 # Install pinned CLI tools via mise + Ansible via pipx + awscli via brew
 install:
     mise install
+    @if ! command -v pipx >/dev/null 2>&1; then \
+        brew install pipx && pipx ensurepath; \
+    else \
+        echo "✓ pipx already installed"; \
+    fi
     @if ! command -v ansible >/dev/null 2>&1; then \
         pipx install --include-deps ansible && pipx inject ansible docker; \
     else \
