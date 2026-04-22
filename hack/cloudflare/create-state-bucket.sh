@@ -25,16 +25,19 @@ fi
 
 # R2 requires path-style addressing and region "auto". The checksum overrides
 # avoid CRC64 upload failures that R2 (and most S3-compat services) reject.
+# AWS_PAGER="" turns off the aws CLI v2 default of paging JSON through less —
+# head-bucket emits a one-line response we don't care about.
 export AWS_DEFAULT_REGION=auto
 export AWS_EC2_METADATA_DISABLED=true
 export AWS_REQUEST_CHECKSUM_CALCULATION=when_required
 export AWS_RESPONSE_CHECKSUM_VALIDATION=when_required
+export AWS_PAGER=""
 
 echo "→ Target: s3://${STATE_BUCKET} @ ${R2_ENDPOINT}"
 
 # 1. Create (or confirm) the bucket
 if aws --endpoint-url="${R2_ENDPOINT}" \
-        s3api head-bucket --bucket "${STATE_BUCKET}" 2>/dev/null; then
+        s3api head-bucket --bucket "${STATE_BUCKET}" >/dev/null 2>&1; then
     echo "✓ Bucket exists"
 else
     echo "→ Creating bucket..."
